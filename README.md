@@ -1,5 +1,4 @@
-# GudeBot
-#### v2.0.2
+# GudeBot Tester
 
 ## Project structure
 
@@ -27,6 +26,7 @@
 ```
 
 ### Deploy slash commands
+
 ```
 npm run register
 ```
@@ -36,16 +36,17 @@ npm run register
 ```
 node app.js
 ```
+
 > ⚙️ A package [like `nodemon`](https://github.com/remy/nodemon), which watches for local changes and restarts your app, may be helpful while locally developing.
 
-This bot uses the example of the Glitch Discord Example as the base for deployment and connecting to Discord. 
+This bot uses the example of the Glitch Discord Example as the base for deployment and connecting to Discord.
 
 ## Notes From Discord Documentation
 
 > ✨ A version of the base code is hosted **[on Glitch 🎏](https://glitch.com/~getting-started-discord)** and **[on Replit 🌀](https://replit.com/github/discord/discord-example-app)**
 
 ### Other resources
+
 - Read **[the documentation](https://discord.com/developers/docs/intro)** for in-depth information about API features.
 - Browse the `examples/` folder in this project for smaller, feature-specific code examples
 - Check out **[community resources](https://discord.com/developers/docs/topics/community-resources#community-resources)** for language-specific tools maintained by community members.
-
