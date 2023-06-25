@@ -21,6 +21,7 @@ import { createRequire } from "module"; // Bring in the ability to create the 'r
 const require = createRequire(import.meta.url); // construct the require method
 
 const fs = require('node:fs');
+
 const {
   Client,
   Events,
@@ -57,23 +58,6 @@ client.once(Events.ClientReady, () => {
   console.log(`Ready! Logged in as ${client.user.tag}`);
   tracking = JSON.parse(fs.readFileSync('./files/track.json'));
   eggTracking = JSON.parse(fs.readFileSync('./files/egg-track.json'));
-});
-
-client.on(Events.InteractionCreate, async interaction => {
-  console.log(interaction);
-  
-	if (!interaction.isChatInputCommand()) return;
-
-	const command = client.commands.get(interaction.commandName);
-
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
 });
 
 client.on("messageCreate", (message) => {
@@ -171,7 +155,7 @@ client.login(process.env.DISCORD_TOKEN);
 app.post('/interactions', async function (req, res) {
   // Interaction type and data
   const { type, id, data } = req.body;
-
+  
   /**
    * Handle verification requests
    */
@@ -186,7 +170,6 @@ app.post('/interactions', async function (req, res) {
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
 
-    // "emotionalsupport" guild command
     if (name === "emotionalsupport") {
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
