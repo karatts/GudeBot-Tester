@@ -186,7 +186,15 @@ app.post('/interactions', async function (req, res) {
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
 
-    // "emotionalsupport" guild command
+    // "test" command
+    if (name === 'test') {
+      return res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: 'testing',
+        },
+      })
+    }
     if (name === "emotionalsupport") {
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
