@@ -31,7 +31,7 @@ const EMOTE_TRACKING_COMMAND = {
 
 const TRACK_COMMAND = {
   name: 'track',
-  description: 'track command',
+  description: 'tester track command',
   "default_member_permissions": "0",
   options: [
     {
@@ -66,6 +66,22 @@ const TRACK_COMMAND = {
         },
         {
           "name": "Wishlist Off",
+          "value": "disabled"
+        }
+      ]
+    },
+   {
+      "type": 3,
+      "name": "externalbot",
+      "description": "External Bots Integration",
+      "required": false,
+      "choices": [
+        {
+          "name": "Enabled",
+          "value": "enabled"
+        },
+        {
+          "name": "Disabled",
           "value": "disabled"
         }
       ]
