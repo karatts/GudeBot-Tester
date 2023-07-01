@@ -3,6 +3,6 @@
     "event": "none",
     "wishlist": "disabled",
     "testing": "disabled",
-    "externalbot": "disabled"
+    "externalbot": "enabled"
   }
 }
