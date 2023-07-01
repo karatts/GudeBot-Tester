@@ -1,14 +1,16 @@
 # GudeBot
 ### Upcoming Changes
-Trigger Keqing functionality on Karuta responses
-```
-- Tracks responses from Karuta to target specific messages
-- Adds emotes to specific messages that trigger keqing
-```
 Music functionality
 ```
 - Joins vc and plays music requested with a specific command
 - Has a queue (Check, clear, remove # in queue, stop, play, pause(?))
+```
+
+### v2.0.3
+Trigger Keqing functionality on Karuta responses
+```
+- Tracks responses from Karuta to target specific messages
+- Adds emotes to specific messages that trigger keqing
 ```
 ### v2.0.2
 Easter Functionality
