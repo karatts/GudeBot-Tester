@@ -9,7 +9,6 @@ export function cardCodeGenerator(message){
 }
 
 export function cardLookup(message){
-    console.log('triggered');
     for (const [key, value] of Object.entries(message.embeds[0])) {
     //console.log(`${key}: ${value}`);
     if(value.title === 'Character Lookup'){

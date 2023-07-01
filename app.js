@@ -62,7 +62,6 @@ client.once(Events.ClientReady, () => {
 });
 
 client.on("messageUpdate", (oldMessage, newMessage) => {
-  console.log('Message edited');
   let trackedChannels = Object.keys(tracking);
   if(trackedChannels.includes(newMessage.channelId)){
 
