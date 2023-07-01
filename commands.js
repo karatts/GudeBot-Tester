@@ -4,12 +4,14 @@ import { InstallGlobalCommands } from './utils.js';
 const EMOTIONAL_SUPPORT_COMMAND = {
   name: 'emotionalsupport',
   description: 'Emotional support command',
+  "default_member_permissions": "0",
   type: 1,
 };
 
 const PAT_COMMAND = {
   name: 'pat',
   description: 'pat command',
+  "default_member_permissions": "0",
   options: [
     {
       "type": 6,
@@ -23,12 +25,13 @@ const PAT_COMMAND = {
 const EMOTE_TRACKING_COMMAND = {
   name: 'emotetracking',
   description: 'emote tracking command',
+  "default_member_permissions": "0",
   type: 1,
 };
 
 const TRACK_COMMAND = {
   name: 'track',
-  description: 'track command',
+  description: 'tester track command',
   "default_member_permissions": "0",
   options: [
     {
@@ -63,6 +66,22 @@ const TRACK_COMMAND = {
         },
         {
           "name": "Wishlist Off",
+          "value": "disabled"
+        }
+      ]
+    },
+   {
+      "type": 3,
+      "name": "externalbot",
+      "description": "External Bots Integration",
+      "required": false,
+      "choices": [
+        {
+          "name": "Enabled",
+          "value": "enabled"
+        },
+        {
+          "name": "Disabled",
           "value": "disabled"
         }
       ]
