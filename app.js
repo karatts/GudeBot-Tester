@@ -235,6 +235,7 @@ app.post('/interactions', async function (req, res) {
             returnMessage += '`'+tracking[channel].event+'`';
           }
           returnMessage += "\n > Wishlist Warning: `"+tracking[channel].wishlist+'`';
+          returnMessage += "\n > External Bot Triggers: `"+tracking[channel].externalbot+'`';
           if(tracking[channel].testing === 'enabled'){
             returnMessage += "\n > Testing Channel: `"+tracking[channel].testing+'`';
           }
