@@ -3,7 +3,7 @@ import { EmbedBuilder } from 'discord.js';
 const helperBubble = new EmbedBuilder()
   .setColor(0xD3D3D3)
   .setTitle('Help!')
-  .setDescription('💞 - Show current Koibito \n🖌️ - Frame and Morph tester \n   Type in the frame name and then the hex color next to it\n   e.g. `Broken Mirror #ff0000`')
+  .setDescription('💞 - Show current Koibito \n🖌️ - Frame and Morph tester \n   Type in the frame name and then the hex color next to it\n   e.g. `Polaroid #0016ff`')
 
 export function cardCodeGenerator(message){
   for (const [key, value] of Object.entries(message.embeds[0])) {
