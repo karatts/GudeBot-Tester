@@ -17,6 +17,7 @@ import { updateEasterTracking, eggHunt, updateBasket } from './commands/track/ea
 import { emoteTracking } from './commands/track/emote.js';
 
 import { cardCodeGenerator, cardLookup, hideHelp } from './bot-interactions/keqing.js';
+import { copypasta, displayCopyEmbed } from './commands/custom.js';
 
 import { createRequire } from "module"; // Bring in the ability to create the 'require' method
 const require = createRequire(import.meta.url); // construct the require method
@@ -52,8 +53,7 @@ const client = new Client({
 
 const karutaUID = '646937666251915264'; //karuta bot id
 const testerUID = '1040041183658922046';
-let tracking;
-let eggTracking;
+let tracking, eggTracking;
 
 client.once(Events.ClientReady, () => {
   console.log(`Ready! Logged in as ${client.user.tag}`);
@@ -61,20 +61,36 @@ client.once(Events.ClientReady, () => {
   eggTracking = JSON.parse(fs.readFileSync('./files/egg-track.json'));
 });
 
+client.on('messageReactionAdd', (reaction, user) => {
+  if(reaction.message.embeds){
+    console.log(reaction.message.embeds[0]);
+    console.log(user.username);
+    if(reaction.message.embeds[0]){
+      for (const [key, value] of Object.entries(reaction.message.embeds[0])) {
+        if(value.title === 'Card Collection' && reaction.emoji.name ===  '📋' && reaction.message.author.id !== process.env.APP_ID){
+          console.log(reaction.message); //troubleshoot empty
+          //displayCopyEmbed(reaction.message);
+        }
+      }
+    }
+  }
+});
+
 client.on("messageUpdate", (oldMessage, newMessage) => {
   let trackedChannels = Object.keys(tracking);
   if(trackedChannels.includes(newMessage.channelId)){
-    // external bot responses
-    //if(tracking[message.channelId].externalbot === 'enabled' && (message.content.startsWith('kc') || message.content.startsWith('k!collection') || message.content.startsWith('kcollection'))){
-    
-    if(tracking[newMessage.channelId].externalbot === 'enabled' && newMessage.author.id === karutaUID){
+    // external bot responses and copypasta    
+    if((tracking[newMessage.channelId].externalbot === 'enabled' || tracking[newMessage.channelId].copypasta === 'enabled') && newMessage.author.id === karutaUID){
       if(newMessage.embeds[0] === undefined || newMessage.embeds[0] === null){
         return;
       } else {
-        cardLookup(newMessage);
+        if(tracking[newMessage.channelId].externalbot === 'enabled'){
+          cardLookup(newMessage);
+        } else {
+          // TO DO
+        }
       }
     }  
-
   }
 });
 
@@ -91,16 +107,19 @@ client.on("messageCreate", (message) => {
       wishlistMessage(message);
     }
     
-    // external bot responses
-    //if(tracking[message.channelId].externalbot === 'enabled' && (message.content.startsWith('kc') || message.content.startsWith('k!collection') || message.content.startsWith('kcollection'))){
-    if(tracking[message.channelId].externalbot === 'enabled' && message.author.id === karutaUID){
+    // external bot responses and copypasta 
+    if((tracking[message.channelId].externalbot === 'enabled' || tracking[message.channelId].copypasta === 'enabled') && message.author.id === karutaUID){
       
       if(message.embeds[0] === undefined || message.embeds[0] === null){
         return;
       } else {
-        cardCodeGenerator(message); // Adds mag emote to karuta kc response
-        cardLookup(message);
-        hideHelp(message); 
+        if(tracking[message.channelId].externalbot === 'enabled'){
+          cardCodeGenerator(message); // Adds mag emote to karuta kc response
+          cardLookup(message);
+          hideHelp(message); 
+        } else {
+          copypasta(message);
+        }
       }
     }
     
@@ -246,9 +265,7 @@ app.post('/interactions', async function (req, res) {
           }
           returnMessage += "\n > Wishlist Warning: `"+tracking[channel].wishlist+'`';
           returnMessage += "\n > External Bot Triggers: `"+tracking[channel].externalbot+'`';
-          if(tracking[channel].testing === 'enabled'){
-            returnMessage += "\n > Testing Channel: `"+tracking[channel].testing+'`';
-          }
+          returnMessage += "\n > Copypasta: `"+tracking[channel].copypasta+'`';
           return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
@@ -266,14 +283,11 @@ app.post('/interactions', async function (req, res) {
       }
       
       // No values by default
-      let event = "none";
-      let wishlist = "disabled";
-      let extbot = "disabled";
-      let testing = "disabled";
-      let eventChange = false;
-      let wlChange = false;
-      let extBotChange = false;
-      let testingChange = false;
+      let event, wishlist, extbot, copypasta;
+      let wlChange, eventChange, extBotChange, copypastaChange;
+      event = "none";
+      wishlist = extbot = copypasta = "disabled";
+      eventChange = wlChange = extBotChange = copypastaChange = false;
       
       for(let i = 0; i < req.body.data.options.length; i++){
 
@@ -294,13 +308,13 @@ app.post('/interactions', async function (req, res) {
             extbot = req.body.data.options[i].value;
             extBotChange = true;
             break;
-          case 'testing':
-            testing = req.body.data.options[i].value;
-            //console.log('Testing tracking: ' + testing);
-            testingChange = true;
+          case 'copypasta':
+            copypasta = req.body.data.options[i].value;
+            copypastaChange = true;
             break;
           default:
             console.log('No filter match');
+            console.log(filter);
             return res.send({
               type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
               data: {
@@ -345,15 +359,15 @@ app.post('/interactions', async function (req, res) {
             tracking[channel].externalbot = extbot;
           }
         }
-        if(testingChange){
-          if (testing === tracking[channel].testing){
+        if(copypastaChange){
+          if (copypasta === tracking[channel].copypasta){
             // Testing setting already set
-            testingChange = false;
+            copypastaChange = false;
             //console.log("No change to wishlist warning setting");
           } else {
             // Update wishlist setting
             //console.log("Update testing setting");
-            tracking[channel].testing = testing;
+            tracking[channel].copypasta = copypasta;
           }
         }
       } else {
@@ -362,12 +376,12 @@ app.post('/interactions', async function (req, res) {
           "event": event,
           "wishlist": wishlist,
           "externalbot": extbot,
-          "testing": testing
+          "copypasta": copypasta
         }
       }
       
       let returnMessage;
-      if (wlChange || eventChange || extBotChange || testingChange ){
+      if (wlChange || eventChange || extBotChange || copypastaChange ){
         returnMessage = "The following have been updated: ";
         
         if(wlChange){
@@ -379,8 +393,8 @@ app.post('/interactions', async function (req, res) {
         if(extBotChange){
           returnMessage += "`external bot integrations` ";
         }
-        if(testingChange){
-          returnMessage += "`testing` ";
+        if(copypastaChange){
+          returnMessage += "`copypasta` ";
         } 
       } else {
         returnMessage = "Tracking has not been changed.";

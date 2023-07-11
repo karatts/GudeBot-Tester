@@ -88,16 +88,16 @@ const TRACK_COMMAND = {
     },
     {
       "type": 3,
-      "name": "testing",
-      "description": "Tester Channel",
+      "name": "copypasta",
+      "description": "Enable card ID copying",
       "required": false,
       "choices": [
         {
-          "name": "Testing On",
+          "name": "Enabled",
           "value": "enabled"
         },
         {
-          "name": "Testing Off",
+          "name": "Disabled",
           "value": "disabled"
         }
       ]
